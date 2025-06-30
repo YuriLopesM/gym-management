@@ -51,10 +51,15 @@ Os principais desafios nessa etapa:
 ## 🚀 Melhorias Futuras
 
 - Implementar um backend real, e utilizar:
-  - **TanStack Query** para gerenciamento de estado e cache
+  - **TanStack Query** para gerenciamento de estado e cache, melhorando a performance
   - **Axios** para requisições HTTP
+  - Adotar, tanto no back quanto no front, padrões de paginação com `limit` e `offset`, para evitar problemas de performance com grandes volumes de dados
+  - Utilizar como base a modelagem de Staff, Member e Coach para criar uma Role Based Access Control (RBAC) no backend, juntamente com JWT e Cookies para autenticação e autorização
   - Pode ser feito, a fim de teste, no próprio Next.js, utilizando o `app/api` para simular um backend
 - Adicionar testes unitários com **Jest** e **React Testing Library**
-- Aproveitar mais os recursos de SSR do Next.js e dos React Server Components
-- Adicionar animações com a biblioteca **Motion** (antiga Framer Motion)
 - Implementar todas as telas e funcionalidades previstas pela modelagem, que por uma questão de tempo não foram implementadas
+- Melhorias gerais:
+  - Adicionar `ErrouBoundary` para capturar erros de renderização
+  - Adicionar telas de 404 e 500
+  - Adicionar animações com a biblioteca **Motion** (antiga Framer Motion)
+  - Aproveitar mais os recursos de SSR do Next.js e dos React Server Components
