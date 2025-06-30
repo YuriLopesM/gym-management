@@ -191,7 +191,7 @@ export function ClassForm({
         </Grid>
         <Grid size={10}>
           <Typography variant="h6" color="text.primary" textAlign="right">
-            Adicionar Aula
+            {operation === 'edit' ? 'Editar' : 'Adicionar'} Aula
           </Typography>
         </Grid>
         <Grid

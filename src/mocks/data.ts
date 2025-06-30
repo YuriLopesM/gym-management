@@ -66,7 +66,7 @@ export const mockClasses = createMany<Class>(
   (index) => ({
     id: index + 1,
     description: `Aula ${index + 1}`,
-    maxCapacity: Math.floor(Math.random() * 50) + 20,
+    maxCapacity: Math.floor(Math.random() * 30) + 20,
     allowLateRegistration: index % 2 === 0,
     date: new Date(2025, 7, 4),
     status: mockClassStatus[index % mockClassStatus.length],
