@@ -71,7 +71,7 @@ const drawerContainerStyle = {
 const schema = z.object({
   name: z.string().min(1, 'Nome é obrigatório'),
   email: z.string().email('Email inválido').min(1, 'Email é obrigatório'),
-  birthDate: z.date().refine((date) => date < new Date(), {
+  birthDate: z.coerce.date().refine((date) => date < new Date(), {
     message: 'A data de nascimento deve ser no passado',
   }),
   document: z.string().optional(),

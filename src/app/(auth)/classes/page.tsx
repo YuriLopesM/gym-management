@@ -32,7 +32,7 @@ interface FormData {
 }
 
 const schema = z.object({
-  date: z.date().optional(),
+  date: z.coerce.date().optional(),
 })
 
 export default function Classes() {
