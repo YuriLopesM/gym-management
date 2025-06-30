@@ -1,3 +1,4 @@
+'use client'
 import { Class, ClassStatus } from '@/types'
 import { Grid, Stack, Typography, useTheme } from '@mui/material'
 

@@ -1,3 +1,4 @@
+'use client'
 import { ClassStatus, ClassStatusType } from '@/types'
 import {
   DoneAll,

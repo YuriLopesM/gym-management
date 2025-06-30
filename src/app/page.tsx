@@ -2,7 +2,12 @@
 
 import { useEffect, useState } from 'react'
 
+import Image from 'next/image'
+import Link from 'next/link'
+import { useRouter } from 'next/navigation'
+
 import { useBreakpoint } from '@/hooks'
+import { zodResolver } from '@hookform/resolvers/zod'
 import { Controller, useForm } from 'react-hook-form'
 
 import Logo from '@/assets/svg/logo.svg'
@@ -23,13 +28,9 @@ import {
   Typography,
 } from '@mui/material'
 
-import Image from 'next/image'
-import Link from 'next/link'
+import { z } from 'zod'
 
 import { setupMocks } from '@/mocks'
-import { zodResolver } from '@hookform/resolvers/zod'
-import { useRouter } from 'next/navigation'
-import * as z from 'zod'
 
 interface FormData {
   email: string

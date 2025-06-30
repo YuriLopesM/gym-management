@@ -1,3 +1,4 @@
+'use client'
 import { ClassStatusType } from '@/types'
 import { Typography } from '@mui/material'
 

@@ -26,7 +26,7 @@ import {
 } from '@mui/material'
 
 import dayjs from 'dayjs'
-import * as z from 'zod'
+import { z } from 'zod'
 
 import { mockClassStatus, mockClassTypes } from '@/mocks'
 import { classApi } from '@/mocks/api/class'

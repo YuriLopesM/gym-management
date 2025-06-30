@@ -19,11 +19,12 @@ import {
   Typography,
 } from '@mui/material'
 
-import * as z from 'zod'
+import { z } from 'zod'
+
+import { FormOperation, Member } from '@/types'
 
 import { setupMocks } from '@/mocks'
 import { memberApi } from '@/mocks/api/member'
-import { FormOperation, Member } from '@/types'
 
 interface FormData {
   searchTerm: string

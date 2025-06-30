@@ -1,7 +1,9 @@
+'use client'
 import { DatePicker } from '@/components'
 import { Button, Drawer, FormControl, Stack, Typography } from '@mui/material'
-import dayjs from 'dayjs'
 import { Controller, type Control } from 'react-hook-form'
+
+import dayjs from 'dayjs'
 
 interface FilterDrawerProps {
   open: boolean

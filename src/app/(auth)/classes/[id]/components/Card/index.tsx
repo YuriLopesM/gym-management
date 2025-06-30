@@ -1,3 +1,4 @@
+'use client'
 import { Grid, Stack, Typography, useTheme } from '@mui/material'
 import { ReactNode } from 'react'
 

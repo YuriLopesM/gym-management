@@ -1,3 +1,5 @@
+'use client'
+
 import { Member } from '@/types'
 import { Grid, Stack, Typography, useTheme } from '@mui/material'
 

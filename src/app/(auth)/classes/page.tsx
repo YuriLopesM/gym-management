@@ -19,7 +19,7 @@ import {
   Typography,
 } from '@mui/material'
 
-import * as z from 'zod'
+import { z } from 'zod'
 
 import { Class } from '@/types'
 import dayjs from 'dayjs'
