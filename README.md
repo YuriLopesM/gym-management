@@ -86,3 +86,4 @@ Os principais desafios nessa etapa:
   - Adicionar telas de 404 e 500
   - Adicionar animações com a biblioteca **Motion** (antiga Framer Motion)
   - Aproveitar mais os recursos de SSR do Next.js e dos React Server Components
+  - Atualizar a modelagem para não utilizar o nome `Class`, que é uma palavra reservada do JavaScript

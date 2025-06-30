@@ -101,12 +101,17 @@ export function ClassForm({
 }: ClassFormProps) {
   const { isBiggerThanTablet } = useBreakpoint()
 
+  const defaultClassData = classData && {
+    ...classData,
+    date: dayjs(classData.date).toDate(),
+  }
+
   const {
     control,
     handleSubmit,
     formState: { isValid, isDirty },
   } = useForm<FormData>({
-    defaultValues: classData || {
+    defaultValues: defaultClassData || {
       description: '',
       maxCapacity: 10,
       date: new Date(),

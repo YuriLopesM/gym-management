@@ -250,6 +250,7 @@ export default function ClassPage() {
           size={12}
           spacing={2}
           display="flex"
+          mt={4}
           justifyContent={isSmallerThanLaptop ? 'center' : 'flex-start'}
         >
           {canAddNewMembers ? (
