@@ -10,7 +10,6 @@ import { useBreakpoint } from '@/hooks'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { Controller, useForm } from 'react-hook-form'
 
-import Logo from '@/assets/svg/logo.svg'
 import {
   ArrowForward,
   Person,
@@ -91,7 +90,12 @@ export default function Home() {
             component="header"
             gap={{ mobile: 0, tablet: 1 }}
           >
-            <Logo width={isSmallerThanLaptop ? 40 : 64} />
+            <Image
+              src="/svg/logo.svg"
+              alt="Logo do sistema Gym Management"
+              width={isSmallerThanLaptop ? 40 : 64}
+              height={isSmallerThanLaptop ? 40 : 64}
+            />
             <Typography
               variant={isDesktop ? 'h4' : 'h5'}
               fontFamily="Sora"

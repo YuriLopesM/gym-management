@@ -1,10 +1,9 @@
 'use client'
 
 import { useBreakpoint } from '@/hooks'
+import Image from 'next/image'
 
 import { Menu } from '@/components'
-
-import Logo from '@/assets/svg/logo.svg'
 import { Grid, useTheme } from '@mui/material'
 
 export function Header() {
@@ -33,7 +32,12 @@ export function Header() {
         <Menu />
       </Grid>
       <Grid>
-        <Logo width="40px" />
+        <Image
+          src="/svg/logo.svg"
+          alt="Logo da academia"
+          width={40}
+          height={40}
+        />
       </Grid>
     </Grid>
   )
