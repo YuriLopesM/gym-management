@@ -1,8 +1,31 @@
-# 🏋️ Gym Management – Desafio Técnico Next Fit
+# 🏋️ Gym Management
 
-**Gym Management** é uma aplicação desenvolvida com foco em gestão de academias, construída como parte de um desafio técnico proposto pela **Next Fit**..
+**Gym Management** é uma aplicação desenvolvida com foco em gestão de academias, construída como parte de um desafio técnico proposto pela **Next Fit**.
 
 ---
+
+## 📚 Instalação e Execução
+
+Para rodar o projeto localmente, siga os passos abaixo:
+
+1. **Clone o repositório:**
+
+   ```bash
+   git clone
+   ```
+
+2. **Instale as dependências:**
+
+   ```bash
+    cd gym-management
+    npm install
+   ```
+
+3. **Inicie o servidor de desenvolvimento:**
+
+   ```bash
+    npm run dev
+   ```
 
 ## 🚀 Tecnologias e Ferramentas
 
