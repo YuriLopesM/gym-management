@@ -2,6 +2,7 @@
 import { Class, ClassStatus } from '@/types'
 import { Grid, Stack, Typography, useTheme } from '@mui/material'
 
+import { useBreakpoint } from '@/hooks'
 import { formatDateToText } from '@/utils/date'
 import { useRouter } from 'next/navigation'
 import { StatusTag } from './StatusTag'
@@ -25,6 +26,8 @@ export function ClassRow({
 }: ClassRowProps) {
   const theme = useTheme()
   const router = useRouter()
+
+  const { isSmallerThanLaptop } = useBreakpoint()
 
   const isOnGoing = status === ClassStatus.ON_GOING
 
@@ -58,7 +61,11 @@ export function ClassRow({
       <Grid size={12} display="flex" justifyItems="space-between">
         <Grid size="grow">
           <Stack spacing={0}>
-            <Typography variant="body2" color="text.primary">
+            <Typography
+              variant={isSmallerThanLaptop ? 'body2' : 'h6'}
+              fontWeight={500}
+              color="text.primary"
+            >
               {description}
             </Typography>
             <Typography variant="body2" color="text.secondary">

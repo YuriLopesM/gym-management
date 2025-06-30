@@ -165,9 +165,8 @@ export default function Classes() {
         direction={{
           mobile: 'column',
           tablet: 'row',
-          laptop: 'row',
-          desktop: 'row',
         }}
+        mt={6}
         sx={{ flexWrap: 'wrap' }}
       >
         {classes.length > 0 &&

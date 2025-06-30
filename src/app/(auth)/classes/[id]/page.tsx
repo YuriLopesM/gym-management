@@ -49,10 +49,10 @@ export default function ClassPage() {
   )
 
   const canAddNewMembers =
-    data &&
-    (data.status === ClassStatus.OPEN ||
-      data.status === ClassStatus.ON_GOING) &&
-    data.allowLateRegistration
+    (data &&
+      data.status === ClassStatus.ON_GOING &&
+      data.allowLateRegistration) ||
+    (data && data.status === ClassStatus.OPEN)
 
   const handleOpenForm = () => {
     setOpenForm(true)

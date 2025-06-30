@@ -13,7 +13,6 @@ import {
   Checkbox,
   Drawer,
   FormControl,
-  FormControlLabel,
   FormHelperText,
   Grid,
   IconButton,
@@ -120,7 +119,7 @@ export function ClassForm({
       allowLateRegistration: true,
     },
     resolver: zodResolver(schema),
-    mode: 'onChange',
+    mode: 'all',
     shouldUnregister: true,
   })
 
@@ -353,10 +352,22 @@ export function ClassForm({
             name="allowLateRegistration"
             control={control}
             render={({ field }) => (
-              <FormControlLabel
-                control={<Checkbox {...field} />}
-                label="Permite inscrição após o início"
-              />
+              <>
+                <Checkbox
+                  id="allow-checkbox"
+                  {...field}
+                  checked={field.value}
+                  onChange={field.onChange}
+                />
+                <Typography
+                  component="label"
+                  htmlFor="allow-checkbox"
+                  variant="body1"
+                  color="text.primary"
+                >
+                  Permite inscrição após o início
+                </Typography>
+              </>
             )}
           />
         </Grid>
