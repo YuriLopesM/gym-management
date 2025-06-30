@@ -1,4 +1,3 @@
-export * from './ClassRow'
 export * from './DatePicker'
 export * from './DateTimePicker'
 export * from './Header'

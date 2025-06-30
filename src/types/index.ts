@@ -8,7 +8,7 @@ export interface Class extends BaseEntity {
   description: string
   maxCapacity: number
   allowLateRegistration: boolean
-  startTime: Date
+  date: Date
   endTime: Date
   status: ClassStatusType
   type: string

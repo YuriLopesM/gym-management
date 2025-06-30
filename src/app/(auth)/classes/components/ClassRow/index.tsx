@@ -7,7 +7,7 @@ import { StatusTag } from './StatusTag'
 interface ClassRowProps
   extends Pick<
     Class,
-    'id' | 'description' | 'maxCapacity' | 'startTime' | 'status' | 'type'
+    'id' | 'description' | 'maxCapacity' | 'date' | 'status' | 'type'
   > {
   currentCapacity: number
 }
@@ -16,7 +16,7 @@ export function ClassRow({
   description,
   maxCapacity,
   currentCapacity,
-  startTime,
+  date,
   status,
   type,
 }: ClassRowProps) {
@@ -81,7 +81,7 @@ export function ClassRow({
         justifyContent="space-between"
       >
         <Typography variant="caption" color="text.secondary">
-          {formatDateToText(startTime)}
+          {formatDateToText(date)}
         </Typography>
         <StatusTag status={status} />
       </Grid>

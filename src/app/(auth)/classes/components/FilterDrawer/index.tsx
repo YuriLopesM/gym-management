@@ -4,9 +4,14 @@ import { Button, Drawer, Stack, Typography } from '@mui/material'
 interface FilterDrawerProps {
   open: boolean
   handleClose: () => void
+  handleSubmit: () => void
 }
 
-export function FilterDrawer({ open, handleClose }: FilterDrawerProps) {
+export function FilterDrawer({
+  open,
+  handleClose,
+  handleSubmit,
+}: FilterDrawerProps) {
   return (
     <Drawer
       anchor="right"
@@ -29,7 +34,7 @@ export function FilterDrawer({ open, handleClose }: FilterDrawerProps) {
             variant="contained"
             color="primary"
             size="large"
-            onClick={handleClose}
+            onClick={handleSubmit}
           >
             Aplicar Filtros
           </Button>

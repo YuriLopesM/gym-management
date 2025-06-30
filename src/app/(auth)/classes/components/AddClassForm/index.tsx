@@ -1,6 +1,11 @@
-import { DateTimePicker } from '@/components'
-import { Class, ClassStatus } from '@/types'
+'use client'
+
+import { useBreakpoint } from '@/hooks'
 import { zodResolver } from '@hookform/resolvers/zod'
+import { Controller, useForm } from 'react-hook-form'
+
+import { DateTimePicker } from '@/components'
+
 import { Close } from '@mui/icons-material'
 import {
   Box,
@@ -19,10 +24,11 @@ import {
   TextField,
   Typography,
 } from '@mui/material'
-import { Controller, useForm } from 'react-hook-form'
 
 import dayjs from 'dayjs'
 import * as z from 'zod'
+
+import { Class, ClassStatus } from '@/types'
 
 interface AddClassFormProps {
   open: boolean
@@ -34,7 +40,7 @@ type FormData = Pick<
   Class,
   | 'description'
   | 'maxCapacity'
-  | 'startTime'
+  | 'date'
   | 'type'
   | 'status'
   | 'allowLateRegistration'
@@ -45,7 +51,7 @@ const modalContainerStyle = {
   top: '50%',
   left: '50%',
   transform: 'translate(-50%, -50%)',
-  width: 400,
+  minWidth: 400,
   bgcolor: 'background.paper',
   borderRadius: 2,
   boxShadow: 24,
@@ -65,12 +71,12 @@ const schema = z.object({
     .string()
     .trim()
     .min(1, 'Descrição é obrigatória')
-    .max(25, 'Capacidade máxima deve ser menor ou igual a 25'),
+    .max(25, 'Descrição deve ter no máximo 25 caracteres'),
   maxCapacity: z.coerce
     .number()
     .min(1, 'Capacidade máxima deve ser maior que 0')
     .max(25, 'Capacidade máxima deve ser menor ou igual a 25'),
-  startTime: z.date().refine((date) => date > new Date(), {
+  date: z.date().refine((date) => date > new Date(), {
     message: 'A data/hora de início deve ser no futuro',
   }),
   type: z.string().min(1, 'Tipo de aula é obrigatório'),
@@ -85,6 +91,8 @@ export function AddClassForm({
   isDrawer,
   handleClose,
 }: AddClassFormProps) {
+  const { isBiggerThanTablet } = useBreakpoint()
+
   const {
     control,
     handleSubmit,
@@ -92,10 +100,11 @@ export function AddClassForm({
   } = useForm<FormData>({
     defaultValues: {
       description: '',
-      startTime: new Date(),
+      maxCapacity: 10,
+      date: new Date(),
       type: '',
       status: ClassStatus.OPEN,
-      allowLateRegistration: false,
+      allowLateRegistration: true,
     },
     resolver: zodResolver(schema),
     mode: 'onChange',
@@ -118,9 +127,14 @@ export function AddClassForm({
     >
       <Grid
         container
-        width="100%"
         sx={isDrawer ? drawerContainerStyle : modalContainerStyle}
-        spacing={2}
+        spacing={4}
+        width={{
+          mobile: '100%',
+          tablet: '80%',
+          laptop: '50%',
+          desktop: '30%',
+        }}
       >
         <Grid size={2}>
           <IconButton onClick={handleClose}>
@@ -136,25 +150,25 @@ export function AddClassForm({
           size={{
             mobile: 12,
             laptop: 6,
-            desktop: 4,
           }}
         >
           <Controller
             name="description"
             control={control}
             render={({ field, fieldState }) => (
-              <FormControl required fullWidth autoFocus>
-                <TextField
-                  {...field}
-                  type="text"
-                  label="Descrição"
-                  variant="standard"
-                  placeholder="Ex: Aula de Pilates"
-                  aria-invalid={!!fieldState.error}
-                  error={!!fieldState.error}
-                  helperText={fieldState.error ? fieldState.error.message : ''}
-                />
-              </FormControl>
+              <TextField
+                {...field}
+                required
+                autoFocus
+                fullWidth
+                type="text"
+                label="Descrição"
+                variant="standard"
+                placeholder="Ex: Aula de Pilates"
+                aria-invalid={!!fieldState.error}
+                error={!!fieldState.error}
+                helperText={fieldState.error ? fieldState.error.message : ''}
+              />
             )}
           />
         </Grid>
@@ -162,7 +176,6 @@ export function AddClassForm({
           size={{
             mobile: 12,
             laptop: 6,
-            desktop: 4,
           }}
         >
           <Controller
@@ -174,9 +187,8 @@ export function AddClassForm({
                 <Select
                   {...field}
                   fullWidth
-                  required
                   labelId="select-type"
-                  label="Tipo de Aula *"
+                  label="Tipo de Aula"
                   error={!!fieldState.error}
                   aria-invalid={!!fieldState.error}
                 >
@@ -194,29 +206,28 @@ export function AddClassForm({
           size={{
             mobile: 12,
             laptop: 6,
-            desktop: 4,
           }}
         >
           <Controller
             name="maxCapacity"
             control={control}
             render={({ field, fieldState }) => (
-              <FormControl required fullWidth error={!!fieldState.error}>
-                <TextField
-                  {...field}
-                  slotProps={{
-                    input: {
-                      type: 'number',
-                    },
-                  }}
-                  label="Capacidade máxima"
-                  variant="standard"
-                  placeholder="Ex: 20"
-                  aria-invalid={!!fieldState.error}
-                  error={!!fieldState.error}
-                  helperText={fieldState.error ? fieldState.error.message : ''}
-                />
-              </FormControl>
+              <TextField
+                {...field}
+                required
+                fullWidth
+                label="Capacidade máxima"
+                variant="standard"
+                placeholder="Ex: 20"
+                aria-invalid={!!fieldState.error}
+                error={!!fieldState.error}
+                helperText={fieldState.error ? fieldState.error.message : ''}
+                slotProps={{
+                  input: {
+                    type: 'number',
+                  },
+                }}
+              />
             )}
           />
         </Grid>
@@ -224,7 +235,6 @@ export function AddClassForm({
           size={{
             mobile: 12,
             laptop: 6,
-            desktop: 4,
           }}
         >
           <Controller
@@ -260,15 +270,9 @@ export function AddClassForm({
             )}
           />
         </Grid>
-        <Grid
-          size={{
-            mobile: 12,
-            laptop: 6,
-            desktop: 4,
-          }}
-        >
+        <Grid size={12}>
           <Controller
-            name="startTime"
+            name="date"
             control={control}
             render={({ field, fieldState }) => (
               <FormControl
@@ -292,11 +296,16 @@ export function AddClassForm({
           />
         </Grid>
         <Grid
-          size={{
-            mobile: 12,
-            laptop: 6,
-            desktop: 4,
-          }}
+          size={12}
+          sx={
+            isBiggerThanTablet
+              ? {
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'flex-end',
+                }
+              : { display: 'flex', justifyContent: 'center' }
+          }
         >
           <Controller
             name="allowLateRegistration"
