@@ -1,95 +1,249 @@
-import Image from "next/image";
-import styles from "./page.module.css";
+'use client'
+
+import { useState } from 'react'
+
+import { useBreakpoint } from '@/hooks'
+import { Controller, useForm } from 'react-hook-form'
+
+import Logo from '@/assets/svg/logo.svg'
+import {
+  ArrowForward,
+  Person,
+  Visibility,
+  VisibilityOff,
+} from '@mui/icons-material'
+import {
+  Box,
+  Button,
+  Grid,
+  IconButton,
+  InputAdornment,
+  Stack,
+  TextField,
+  Typography,
+} from '@mui/material'
+
+import Image from 'next/image'
+import Link from 'next/link'
+
+import { zodResolver } from '@hookform/resolvers/zod'
+import * as z from 'zod'
+
+interface FormData {
+  email: string
+  password: string
+}
+
+const schema = z.object({
+  email: z.string().email('Email inválido'),
+  password: z.string().min(8, 'A senha deve ter pelo menos 8 caracteres'),
+})
 
 export default function Home() {
-  return (
-    <div className={styles.page}>
-      <main className={styles.main}>
-        <Image
-          className={styles.logo}
-          src="/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
-        />
-        <ol>
-          <li>
-            Get started by editing <code>src/app/page.tsx</code>.
-          </li>
-          <li>Save and see your changes instantly.</li>
-        </ol>
+  const { isMobile, isDesktop, isSmallerThanLaptop } = useBreakpoint()
+  const [showPassword, setShowPassword] = useState(false)
 
-        <div className={styles.ctas}>
-          <a
-            className={styles.primary}
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
+  const {
+    control,
+    handleSubmit,
+    formState: { isValid, isDirty },
+  } = useForm<FormData>({
+    defaultValues: {
+      email: '',
+      password: '',
+    },
+    resolver: zodResolver(schema),
+    mode: 'onChange',
+  })
+
+  const onSubmit = (data: FormData) => console.log(data)
+
+  const handleClickShowPassword = () => setShowPassword((show) => !show)
+
+  const isSubmitDisabled = !isDirty || !isValid
+
+  return (
+    <Grid container height="100vh">
+      <Grid size="grow">
+        <Stack
+          height="100%"
+          alignItems="center"
+          justifyContent="space-between"
+          paddingBlock={{ mobile: 4, tablet: 5, laptop: 6, desktop: 8 }}
+          paddingInline={{ mobile: 3, tablet: 3, laptop: 4, desktop: 6 }}
+          spacing={4}
+        >
+          <Grid
+            display="flex"
+            flexDirection={{ mobile: 'column', tablet: 'row' }}
+            justifyContent="center"
+            alignItems="center"
+            component="header"
+            gap={{ mobile: 0, tablet: 1 }}
           >
-            <Image
-              className={styles.logo}
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
-            />
-            Deploy now
-          </a>
-          <a
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-            className={styles.secondary}
+            <Logo width={isSmallerThanLaptop ? 40 : 64} />
+            <Typography
+              variant={isDesktop ? 'h4' : 'h5'}
+              fontFamily="Sora"
+              fontWeight={700}
+              color="primary.main"
+            >
+              Gym Management
+            </Typography>
+          </Grid>
+          <Stack
+            spacing={3}
+            minWidth={{ mobile: '100%', laptop: 400, desktop: 500 }}
+            component="main"
           >
-            Read our docs
-          </a>
-        </div>
-      </main>
-      <footer className={styles.footer}>
-        <a
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
+            <Typography variant={isDesktop ? 'h5' : 'h6'}>
+              👋 Bem-vindo novamente!
+            </Typography>
+
+            <Stack spacing={2} component="form">
+              <Controller
+                name="email"
+                control={control}
+                render={({ field, fieldState }) => (
+                  <TextField
+                    {...field}
+                    aria-invalid={!!fieldState.error}
+                    variant="standard"
+                    label="Email"
+                    type="email"
+                    fullWidth
+                    autoComplete="email"
+                    autoFocus
+                    error={!!fieldState.error}
+                    helperText={
+                      fieldState.error ? fieldState.error.message : ''
+                    }
+                    slotProps={{
+                      input: {
+                        endAdornment: (
+                          <InputAdornment position="end">
+                            <IconButton disabled>
+                              <Person />
+                            </IconButton>
+                          </InputAdornment>
+                        ),
+                      },
+                    }}
+                  />
+                )}
+              />
+              <Controller
+                name="password"
+                control={control}
+                shouldUnregister={true}
+                render={({ field, fieldState }) => (
+                  <TextField
+                    {...field}
+                    aria-invalid={!!fieldState.error}
+                    variant="standard"
+                    label="Senha"
+                    type={showPassword ? 'text' : 'password'}
+                    fullWidth
+                    autoComplete="current-password"
+                    error={!!fieldState.error}
+                    helperText={
+                      fieldState.error ? fieldState.error.message : ''
+                    }
+                    slotProps={{
+                      input: {
+                        endAdornment: (
+                          <InputAdornment position="end">
+                            <IconButton
+                              aria-label={
+                                showPassword
+                                  ? 'Esconder senha'
+                                  : 'Mostrar senha'
+                              }
+                              onClick={handleClickShowPassword}
+                            >
+                              {showPassword ? (
+                                <VisibilityOff />
+                              ) : (
+                                <Visibility />
+                              )}
+                            </IconButton>
+                          </InputAdornment>
+                        ),
+                      },
+                    }}
+                  />
+                )}
+              />
+              <Typography
+                variant="caption"
+                color="primary.main"
+                sx={{ alignSelf: 'flex-end', textDecoration: 'underline' }}
+              >
+                <Link href="/">Esqueceu sua senha?</Link>
+              </Typography>
+            </Stack>
+
+            <Button
+              type="submit"
+              variant="contained"
+              size="large"
+              onClick={handleSubmit(onSubmit)}
+              disabled={isSubmitDisabled}
+              endIcon={!isSubmitDisabled && <ArrowForward />}
+            >
+              {isSubmitDisabled ? 'Preencha os campos' : 'Entrar'}
+            </Button>
+          </Stack>
+          <Stack
+            spacing={4}
+            component="footer"
+            maxWidth={{
+              mobile: '100%',
+              tablet: 400,
+              laptop: 500,
+              desktop: 600,
+            }}
+            display="flex"
+            alignItems="center"
+          >
+            <Box display="flex" alignItems="center" gap={2}>
+              <Typography variant="overline" color="text.secondary">
+                <Link href="/">Contato com o Suporte</Link>
+              </Typography>
+              <Box width="1px" height="50%" bgcolor="text.secondary" />
+              <Typography variant="overline" color="text.secondary">
+                <Link href="/">Termos de Uso</Link>
+              </Typography>
+            </Box>
+            <Typography variant="caption" color="text.secondary">
+              Feito com 💜 por{' '}
+              <a href="https://github.com/YuriLopesM">Yuri Lopes</a>
+            </Typography>
+          </Stack>
+        </Stack>
+      </Grid>
+      {!isMobile && (
+        <Grid size={{ mobile: 'grow' }} position="relative">
+          <Box
+            bgcolor="primary.main"
+            sx={{
+              mixBlendMode: 'overlay',
+              position: 'absolute',
+              inset: 0,
+              zIndex: 1,
+              opacity: 0.9,
+              pointerEvents: 'none',
+            }}
           />
-          Learn
-        </a>
-        <a
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
           <Image
-            aria-hidden
-            src="/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
+            src="/hero.jpg"
+            fill={true}
+            alt="Imagem com halteres em uma academia"
+            objectFit="cover"
+            quality={90}
           />
-          Examples
-        </a>
-        <a
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
-        </a>
-      </footer>
-    </div>
-  );
+        </Grid>
+      )}
+    </Grid>
+  )
 }
