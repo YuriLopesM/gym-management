@@ -1,43 +1,41 @@
 'use client'
 
-import { useState } from 'react'
+import { Fragment, useState } from 'react'
 
-import { ClassRow, DatePicker } from '@/components'
 import { useBreakpoint } from '@/hooks'
 
-import { FilterAlt } from '@mui/icons-material'
-import { Button, Drawer, Grid, Stack, Typography } from '@mui/material'
+import { ClassRow } from '@/components'
+import { AddClassForm, FilterDrawer } from './components'
+
+import { Add, FilterAlt } from '@mui/icons-material'
+import { Button, Fab, Grid, Stack, Typography } from '@mui/material'
 
 import { ClassStatus } from '@/types'
 
 export default function Classes() {
-  const [openFilterMenu, setOpenFilterMenu] = useState(false)
-  const { isSmallerThanLaptop } = useBreakpoint()
+  const [openFilterDrawer, setOpenFilterDrawer] = useState(false)
+  const [openAddClassDrawer, setOpenAddClassDrawer] = useState(false)
 
-  const handleOpenFilterMenu = () => {
-    setOpenFilterMenu(true)
+  const { isSmallerThanLaptop, isMobile } = useBreakpoint()
+
+  const handleOpenFilterDrawer = () => {
+    setOpenFilterDrawer(true)
   }
 
-  const handleCloseFilterMenu = () => {
-    setOpenFilterMenu(false)
+  const handleCloseFilterDrawer = () => {
+    setOpenFilterDrawer(false)
+  }
+
+  const handleOpenAddClassDrawer = () => {
+    setOpenAddClassDrawer(true)
+  }
+
+  const handleCloseAddClassDrawer = () => {
+    setOpenAddClassDrawer(false)
   }
 
   return (
-    <Grid
-      container
-      maxWidth="100%"
-      component="main"
-      spacing={2}
-      margin={{
-        mobile: '24px auto',
-        laptop: '32px auto',
-      }}
-      padding={{
-        mobile: '0 32px',
-        laptop: '0 64px',
-        desktop: '0 128px',
-      }}
-    >
+    <Fragment>
       <Grid size={{ mobile: 12, tablet: 12, laptop: 6 }} margin="auto">
         <Stack spacing={0} flexWrap="wrap" width="100%">
           <Typography variant="h6" color="text.primary">
@@ -54,50 +52,16 @@ export default function Classes() {
         justifyContent="flex-end"
       >
         {isSmallerThanLaptop ? (
-          <>
-            <Button
-              type="button"
-              variant="outlined"
-              startIcon={<FilterAlt />}
-              onClick={handleOpenFilterMenu}
-            >
-              Filtros
-            </Button>
-            <Drawer
-              anchor="right"
-              open={openFilterMenu}
-              onClose={handleCloseFilterMenu}
-              sx={{
-                display: 'flex',
-                flexDirection: 'column',
-                gap: 4,
-              }}
-            >
-              <Stack spacing={6} my={4} px={2} width="100%">
-                <Typography
-                  variant="h6"
-                  color="text.secondary"
-                  textAlign="center"
-                >
-                  Filtros
-                </Typography>
-                <Stack spacing={2}>
-                  <DatePicker />
-                  <Button
-                    type="button"
-                    variant="contained"
-                    color="primary"
-                    size="large"
-                    onClick={handleCloseFilterMenu}
-                  >
-                    Aplicar Filtros
-                  </Button>
-                </Stack>
-              </Stack>
-            </Drawer>
-          </>
+          <Button
+            type="button"
+            variant="outlined"
+            startIcon={<FilterAlt />}
+            onClick={handleOpenFilterDrawer}
+          >
+            Filtros
+          </Button>
         ) : (
-          <>teste</>
+          <button onClick={handleOpenAddClassDrawer}>teste</button>
         )}
       </Grid>
       <Stack
@@ -154,10 +118,30 @@ export default function Classes() {
           maxCapacity={15}
           currentCapacity={5}
           startTime={new Date('2025-07-03T10:00:00Z')}
-          status={ClassStatus.CANCELLED}
+          status={ClassStatus.CANCELED}
           type="Crossfit"
         />
       </Stack>
-    </Grid>
+      {isMobile && (
+        <Fab
+          color="primary"
+          aria-label="add"
+          sx={{ position: 'fixed', bottom: 24, right: 24 }}
+          onClick={handleOpenAddClassDrawer}
+        >
+          <Add />
+        </Fab>
+      )}
+
+      <FilterDrawer
+        open={openFilterDrawer}
+        handleClose={handleCloseFilterDrawer}
+      />
+      <AddClassForm
+        open={openAddClassDrawer}
+        isDrawer={isMobile}
+        handleClose={handleCloseAddClassDrawer}
+      />
+    </Fragment>
   )
 }

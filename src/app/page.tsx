@@ -107,13 +107,13 @@ export default function Home() {
                 render={({ field, fieldState }) => (
                   <TextField
                     {...field}
-                    aria-invalid={!!fieldState.error}
+                    autoFocus
                     variant="standard"
                     label="Email"
                     type="email"
                     fullWidth
                     autoComplete="email"
-                    autoFocus
+                    aria-invalid={!!fieldState.error}
                     error={!!fieldState.error}
                     helperText={
                       fieldState.error ? fieldState.error.message : ''

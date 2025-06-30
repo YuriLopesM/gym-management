@@ -19,7 +19,7 @@ export const ClassStatus = {
   OPEN: 'Aberta',
   FULL: 'Grupo fechado',
   FINISHED: 'Finalizada',
-  CANCELLED: 'Cancelada',
+  CANCELED: 'Cancelada',
 } as const
 
 export type ClassStatusType = (typeof ClassStatus)[keyof typeof ClassStatus]
