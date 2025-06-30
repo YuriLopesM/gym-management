@@ -1,3 +1,3 @@
-export * from './AddClassForm'
+export * from './ClassForm'
 export * from './ClassRow'
 export * from './FilterDrawer'

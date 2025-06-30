@@ -1,13 +1,13 @@
 'use client'
 
-import { Fragment, useState } from 'react'
+import { Fragment, useEffect, useState } from 'react'
 
 import { useBreakpoint } from '@/hooks'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { Controller, useForm } from 'react-hook-form'
 
 import { DatePicker } from '@/components'
-import { AddClassForm, ClassRow, FilterDrawer } from './components'
+import { ClassForm, ClassRow, FilterDrawer } from './components'
 
 import { Add, FilterAlt } from '@mui/icons-material'
 import {
@@ -21,8 +21,11 @@ import {
 
 import * as z from 'zod'
 
-import { ClassStatus } from '@/types'
+import { Class } from '@/types'
 import dayjs from 'dayjs'
+
+import { setupMocks } from '@/mocks'
+import { classApi } from '@/mocks/api/class'
 
 interface FormData {
   date?: Date
@@ -33,16 +36,21 @@ const schema = z.object({
 })
 
 export default function Classes() {
+  useEffect(setupMocks, [])
+
+  const { isSmallerThanLaptop, isBiggerThanMobile, isMobile } = useBreakpoint()
+
   const { control, handleSubmit } = useForm<FormData>({
     resolver: zodResolver(schema),
     mode: 'onChange',
     shouldUnregister: true,
   })
+  const [date, setDate] = useState<Date | undefined>(undefined)
+  const [classes, setClasses] = useState<Class[]>([])
 
   const [openFilterDrawer, setOpenFilterDrawer] = useState(false)
-  const [openAddClassDrawer, setOpenAddClassDrawer] = useState(false)
 
-  const { isSmallerThanLaptop, isBiggerThanMobile, isMobile } = useBreakpoint()
+  const [openForm, setOpenForm] = useState(false)
 
   const handleOpenFilterDrawer = () => {
     setOpenFilterDrawer(true)
@@ -52,18 +60,36 @@ export default function Classes() {
     setOpenFilterDrawer(false)
   }
 
-  const handleOpenAddClassDrawer = () => {
-    setOpenAddClassDrawer(true)
+  const handleOpenForm = () => {
+    setOpenForm(true)
   }
 
-  const handleCloseAddClassDrawer = () => {
-    setOpenAddClassDrawer(false)
+  const handleCloseForm = (data?: Class) => {
+    if (data) {
+      setClasses((prevClasses) => [...prevClasses, data])
+    }
+
+    setOpenForm(false)
   }
 
-  const handleApplyFilters = (data: FormData) => {
-    console.log('Applied Filters:', data)
+  const handleApplyFilters = ({ date }: FormData) => {
+    setDate(date)
     handleCloseFilterDrawer()
   }
+
+  useEffect(() => {
+    const getAllClasses = async () => {
+      try {
+        const classes = await classApi.getByDate(date)
+
+        setClasses(classes)
+      } catch (error) {
+        console.error('Error fetching classes:', error)
+      }
+    }
+
+    getAllClasses()
+  }, [date])
 
   return (
     <Fragment>
@@ -144,52 +170,49 @@ export default function Classes() {
         }}
         sx={{ flexWrap: 'wrap' }}
       >
-        <ClassRow
-          id="1"
-          description="Aula de Yoga"
-          maxCapacity={20}
-          currentCapacity={15}
-          date={new Date()}
-          status={ClassStatus.ON_GOING}
-          type="Yoga"
-        />
-        <ClassRow
-          id="2"
-          description="Aula de Musculação"
-          maxCapacity={25}
-          currentCapacity={25}
-          date={new Date('2025-06-30T10:00:00Z')}
-          status={ClassStatus.FULL}
-          type="Musculação"
-        />
-        <ClassRow
-          id="3"
-          description="Aula de Pilates"
-          maxCapacity={15}
-          currentCapacity={10}
-          date={new Date('2025-07-01T10:00:00Z')}
-          status={ClassStatus.OPEN}
-          type="Pilates"
-        />
-        <ClassRow
-          id="4"
-          description="Aula de Zumba"
-          maxCapacity={30}
-          currentCapacity={20}
-          date={new Date('2025-07-02T10:00:00Z')}
-          status={ClassStatus.FINISHED}
-          type="Zumba"
-        />
-        <ClassRow
-          id="5"
-          description="Aula de Crossfit"
-          maxCapacity={15}
-          currentCapacity={5}
-          date={new Date('2025-07-03T10:00:00Z')}
-          status={ClassStatus.CANCELED}
-          type="Crossfit"
-        />
-        {isBiggerThanMobile && (
+        {classes.length > 0 &&
+          classes.map(
+            ({ id, description, maxCapacity, date, status, type, members }) => (
+              <ClassRow
+                key={id}
+                id={id}
+                description={description}
+                maxCapacity={maxCapacity}
+                currentCapacity={members?.length || 0}
+                date={new Date(date)}
+                status={status}
+                type={type}
+              />
+            )
+          )}
+
+        {classes.length === 0 && (
+          <Grid
+            size={12}
+            display="flex"
+            width="100%"
+            justifyContent="center"
+            alignItems="center"
+            height="400px"
+          >
+            <Typography
+              variant="body1"
+              color="text.secondary"
+              textAlign="center"
+            >
+              Nenhuma aula encontrada. Comece{' '}
+              <Typography
+                color="primary.main"
+                component="span"
+                onClick={handleOpenForm}
+              >
+                adicionando sua primeira aula.
+              </Typography>
+            </Typography>
+          </Grid>
+        )}
+
+        {isBiggerThanMobile && classes.length > 0 && (
           <Grid
             size={{
               tablet: 6,
@@ -202,7 +225,7 @@ export default function Classes() {
               variant="outlined"
               color="primary"
               startIcon={<Add />}
-              onClick={handleOpenAddClassDrawer}
+              onClick={handleOpenForm}
               fullWidth
               sx={{ height: '100%' }}
             >
@@ -216,7 +239,7 @@ export default function Classes() {
           color="primary"
           aria-label="add"
           sx={{ position: 'fixed', bottom: 24, right: 24 }}
-          onClick={handleOpenAddClassDrawer}
+          onClick={handleOpenForm}
         >
           <Add />
         </Fab>
@@ -226,11 +249,14 @@ export default function Classes() {
         open={openFilterDrawer}
         handleClose={handleCloseFilterDrawer}
         handleSubmit={handleSubmit(handleApplyFilters)}
+        dateController={control}
       />
-      <AddClassForm
-        open={openAddClassDrawer}
+      <ClassForm
+        open={openForm}
         isDrawer={isMobile}
-        handleClose={handleCloseAddClassDrawer}
+        operation="add"
+        classData={null}
+        handleClose={handleCloseForm}
       />
     </Fragment>
   )

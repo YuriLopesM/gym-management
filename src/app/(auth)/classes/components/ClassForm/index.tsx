@@ -28,12 +28,17 @@ import {
 import dayjs from 'dayjs'
 import * as z from 'zod'
 
-import { Class, ClassStatus } from '@/types'
+import { mockClassStatus, mockClassTypes } from '@/mocks'
+import { classApi } from '@/mocks/api/class'
+import { Class, ClassStatus, FormOperation } from '@/types'
 
-interface AddClassFormProps {
+interface ClassFormProps {
   open: boolean
   isDrawer: boolean
-  handleClose: () => void
+  operation: FormOperation
+  classData: Class | null
+  handleClose: (data?: Class) => void
+  handleDelete?: (id: number) => void
 }
 
 type FormData = Pick<
@@ -75,8 +80,8 @@ const schema = z.object({
   maxCapacity: z.coerce
     .number()
     .min(1, 'Capacidade máxima deve ser maior que 0')
-    .max(25, 'Capacidade máxima deve ser menor ou igual a 25'),
-  date: z.date().refine((date) => date > new Date(), {
+    .max(60, 'Capacidade máxima deve ser menor ou igual a 60'),
+  date: z.coerce.date().refine((date) => date > new Date(), {
     message: 'A data/hora de início deve ser no futuro',
   }),
   type: z.string().min(1, 'Tipo de aula é obrigatório'),
@@ -86,11 +91,14 @@ const schema = z.object({
   allowLateRegistration: z.boolean(),
 })
 
-export function AddClassForm({
+export function ClassForm({
   open,
   isDrawer,
+  operation,
+  classData,
   handleClose,
-}: AddClassFormProps) {
+  handleDelete,
+}: ClassFormProps) {
   const { isBiggerThanTablet } = useBreakpoint()
 
   const {
@@ -98,7 +106,7 @@ export function AddClassForm({
     handleSubmit,
     formState: { isValid, isDirty },
   } = useForm<FormData>({
-    defaultValues: {
+    defaultValues: classData || {
       description: '',
       maxCapacity: 10,
       date: new Date(),
@@ -111,14 +119,54 @@ export function AddClassForm({
     shouldUnregister: true,
   })
 
-  const onSubmit = (data: FormData) => console.log(data)
+  const updateClass = async (data: Class) => {
+    try {
+      await classApi.update(data)
+      alert('Aula atualizada com sucesso!')
+    } catch (error) {
+      console.error('Erro ao atualizar aula:', error)
+    }
+  }
+
+  const createClass = async (data: Class) => {
+    try {
+      await classApi.create(data)
+      alert('Aula criada com sucesso!')
+    } catch (error) {
+      console.error('Erro ao adicionar aula:', error)
+    }
+  }
+
+  const onSubmit = (data: FormData) => {
+    if (operation === 'edit' && classData) {
+      const editedData: Class = {
+        ...classData,
+        ...data,
+        updatedAt: new Date(),
+      }
+
+      updateClass(editedData)
+      return handleClose(editedData)
+    }
+
+    const newData: Class = {
+      ...data,
+      id: Date.now(), // ID simples para exemplo
+      createdAt: new Date(),
+      updatedAt: new Date(),
+    }
+
+    createClass(newData)
+
+    handleClose(newData)
+  }
 
   return (
     <Box
       component={isDrawer ? Drawer : Modal}
       anchor="bottom"
       open={open}
-      onClose={handleClose}
+      onClose={() => handleClose()}
       sx={{
         display: 'flex',
         flexDirection: 'column',
@@ -137,7 +185,7 @@ export function AddClassForm({
         }}
       >
         <Grid size={2}>
-          <IconButton onClick={handleClose}>
+          <IconButton onClick={() => handleClose()}>
             <Close />
           </IconButton>
         </Grid>
@@ -188,15 +236,14 @@ export function AddClassForm({
                   {...field}
                   fullWidth
                   labelId="select-type"
-                  label="Tipo de Aula"
                   error={!!fieldState.error}
                   aria-invalid={!!fieldState.error}
                 >
-                  <MenuItem value="Yoga">Yoga</MenuItem>
-                  <MenuItem value="Pilates">Pilates</MenuItem>
-                  <MenuItem value="Musculação">Musculação</MenuItem>
-                  <MenuItem value="Dança">Dança</MenuItem>
-                  <MenuItem value="Cardio">Cardio</MenuItem>
+                  {mockClassTypes.map((classType) => (
+                    <MenuItem key={classType} value={classType}>
+                      {classType}
+                    </MenuItem>
+                  ))}
                 </Select>
               </FormControl>
             )}
@@ -250,21 +297,11 @@ export function AddClassForm({
                   error={!!fieldState.error}
                   aria-invalid={!!fieldState.error}
                 >
-                  <MenuItem value={ClassStatus.OPEN}>
-                    {ClassStatus.OPEN}
-                  </MenuItem>
-                  <MenuItem value={ClassStatus.ON_GOING}>
-                    {ClassStatus.ON_GOING}
-                  </MenuItem>
-                  <MenuItem value={ClassStatus.FULL}>
-                    {ClassStatus.FULL}
-                  </MenuItem>
-                  <MenuItem value={ClassStatus.CANCELED}>
-                    {ClassStatus.CANCELED}
-                  </MenuItem>
-                  <MenuItem value={ClassStatus.FINISHED}>
-                    {ClassStatus.FINISHED}
-                  </MenuItem>
+                  {mockClassStatus.map((status) => (
+                    <MenuItem key={status} value={status}>
+                      {status}
+                    </MenuItem>
+                  ))}
                 </Select>
               </FormControl>
             )}
@@ -326,8 +363,20 @@ export function AddClassForm({
           onClick={handleSubmit(onSubmit)}
           disabled={!isValid || !isDirty}
         >
-          Adicionar aula
+          {operation === 'edit' ? 'Editar' : 'Adicionar'} aula
         </Button>
+        {operation === 'edit' && classData && handleDelete && (
+          <Button
+            type="button"
+            fullWidth
+            variant="outlined"
+            size="large"
+            color="error"
+            onClick={() => handleDelete(classData.id)}
+          >
+            Excluir aula
+          </Button>
+        )}
       </Grid>
     </Box>
   )

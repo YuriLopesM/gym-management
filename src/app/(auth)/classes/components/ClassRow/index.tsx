@@ -2,6 +2,7 @@ import { Class, ClassStatus } from '@/types'
 import { Grid, Stack, Typography, useTheme } from '@mui/material'
 
 import { formatDateToText } from '@/utils/date'
+import { useRouter } from 'next/navigation'
 import { StatusTag } from './StatusTag'
 
 interface ClassRowProps
@@ -13,6 +14,7 @@ interface ClassRowProps
 }
 
 export function ClassRow({
+  id,
   description,
   maxCapacity,
   currentCapacity,
@@ -21,6 +23,7 @@ export function ClassRow({
   type,
 }: ClassRowProps) {
   const theme = useTheme()
+  const router = useRouter()
 
   const isOnGoing = status === ClassStatus.ON_GOING
 
@@ -49,6 +52,7 @@ export function ClassRow({
           : `1px solid ${theme.palette.grey[300]}`
       }
       alignItems="center"
+      onClick={() => router.push(`/classes/${id}`)}
     >
       <Grid size={12} display="flex" justifyItems="space-between">
         <Grid size="grow">

@@ -1,36 +1,60 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# 🏋️ Gym Management – Desafio Técnico Next Fit
 
-## Getting Started
+**Gym Management** é uma aplicação desenvolvida com foco em gestão de academias, construída como parte de um desafio técnico proposto pela **Next Fit**..
 
-First, run the development server:
+---
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+## 🚀 Tecnologias e Ferramentas
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+| Categoria    | Ferramenta/Lib              | Justificativa                                                   |
+| ------------ | --------------------------- | --------------------------------------------------------------- |
+| Framework    | **Next.js 15 (App Router)** | Uso da versão mais recente como desafio adicional e base sólida |
+| Linguagem    | **TypeScript**              | Tipagem estática para evitar bugs e facilitar manutenção        |
+| UI Kit       | **Material UI (MUI)**       | Compatível com o design da empresa e já utilizado no Figma      |
+| Formulários  | **React Hook Form + Zod**   | Performance e validação baseada em schema                       |
+| Datas        | **Day.js**                  | Leve, performático e com boa API                                |
+| Code Quality | **ESLint + Prettier**       | Padronização automática de código                               |
+| Git Hooks    | **Husky**                   | Lint, formatação e testes antes do commit                       |
+| Compilador   | **React Compiler**          | Experimental, diminuir a necessidade de memos                   |
+| CI/CD        | **Vercel**                  | Integração direta com a plataforma                              |
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+---
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## 🧠 Processo Criativo & Desenvolvimento
 
-## Learn More
+### 1. Modelagem de Dados
 
-To learn more about Next.js, take a look at the following resources:
+Antes da interface, a base de dados foi modelada para facilitar:
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+- Criação de `mocks` realistas para simular APIs
+- Geração de tipagens estáticas no front
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+### 2. UX & Design
 
-## Deploy on Vercel
+- **Heurísticas de Nielsen** e **Moodboard** para base conceitual
+- Criação de protótipos no **Figma**, com bibliotecas do MUI
+- Abordagem **mobile-first**
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+### 3. Frontend
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+Os principais desafios nessa etapa:
+
+- Depois de muito tempo utilizando o Ant Design, se adaptar ao MUI e suas convenções foi um desafio interessante, que envolveu:
+  - Entender como o MUI lida com temas e estilos
+  - Aprender a usar os componentes de forma eficiente
+  - Sintaxe e convenções diferentes
+  - Maneiras diferentes de lidar com responsividade
+- Nova versão do Next.js (15), nunca tinha trabalhado com o App Router e as novas apis, como `useRouter`, `useSearchParams`, `useParams`, etc.
+
+---
+
+## 🚀 Melhorias Futuras
+
+- Implementar um backend real, e utilizar:
+  - **TanStack Query** para gerenciamento de estado e cache
+  - **Axios** para requisições HTTP
+  - Pode ser feito, a fim de teste, no próprio Next.js, utilizando o `app/api` para simular um backend
+- Adicionar testes unitários com **Jest** e **React Testing Library**
+- Aproveitar mais os recursos de SSR do Next.js e dos React Server Components
+- Adicionar animações com a biblioteca **Motion** (antiga Framer Motion)
+- Implementar todas as telas e funcionalidades previstas pela modelagem, que por uma questão de tempo não foram implementadas

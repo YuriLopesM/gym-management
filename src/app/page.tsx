@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 
 import { useBreakpoint } from '@/hooks'
 import { Controller, useForm } from 'react-hook-form'
@@ -26,7 +26,9 @@ import {
 import Image from 'next/image'
 import Link from 'next/link'
 
+import { setupMocks } from '@/mocks'
 import { zodResolver } from '@hookform/resolvers/zod'
+import { useRouter } from 'next/navigation'
 import * as z from 'zod'
 
 interface FormData {
@@ -40,6 +42,10 @@ const schema = z.object({
 })
 
 export default function Home() {
+  useEffect(setupMocks, [])
+
+  const router = useRouter()
+
   const { isMobile, isDesktop, isSmallerThanLaptop } = useBreakpoint()
   const [showPassword, setShowPassword] = useState(false)
 
@@ -56,7 +62,10 @@ export default function Home() {
     mode: 'onChange',
   })
 
-  const onSubmit = (data: FormData) => console.log(data)
+  const onSubmit = (data: FormData) => {
+    console.log('Form data:', data)
+    router.push('/classes')
+  }
 
   const handleClickShowPassword = () => setShowPassword((show) => !show)
 

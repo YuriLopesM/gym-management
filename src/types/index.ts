@@ -1,5 +1,5 @@
 export interface BaseEntity {
-  id: string
+  id: number
   createdAt: Date
   updatedAt: Date
 }
@@ -9,9 +9,30 @@ export interface Class extends BaseEntity {
   maxCapacity: number
   allowLateRegistration: boolean
   date: Date
-  endTime: Date
   status: ClassStatusType
   type: string
+  members?: Member[]
+}
+
+export interface Member extends User {
+  paymentPlan: string
+}
+
+export interface User extends BaseEntity {
+  name: string
+  email: string
+  birthDate: Date
+  document?: string
+  address?: Address
+}
+
+export interface Address {
+  street: string
+  number: string
+  district: string
+  city: string
+  state: string
+  zipCode: string
 }
 
 export const ClassStatus = {
@@ -23,3 +44,5 @@ export const ClassStatus = {
 } as const
 
 export type ClassStatusType = (typeof ClassStatus)[keyof typeof ClassStatus]
+
+export type FormOperation = 'add' | 'edit'

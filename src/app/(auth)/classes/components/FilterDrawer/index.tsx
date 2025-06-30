@@ -1,14 +1,18 @@
 import { DatePicker } from '@/components'
-import { Button, Drawer, Stack, Typography } from '@mui/material'
+import { Button, Drawer, FormControl, Stack, Typography } from '@mui/material'
+import dayjs from 'dayjs'
+import { Controller, type Control } from 'react-hook-form'
 
 interface FilterDrawerProps {
   open: boolean
+  dateController: Control
   handleClose: () => void
   handleSubmit: () => void
 }
 
 export function FilterDrawer({
   open,
+  dateController,
   handleClose,
   handleSubmit,
 }: FilterDrawerProps) {
@@ -28,7 +32,21 @@ export function FilterDrawer({
           Filtros
         </Typography>
         <Stack spacing={2}>
-          <DatePicker />
+          <Controller
+            name="date"
+            control={dateController}
+            render={({ field }) => (
+              <FormControl sx={{ mt: 2 }}>
+                <DatePicker
+                  {...field}
+                  label="Data da aula"
+                  value={field.value ? dayjs(field.value) : null}
+                  onChange={(date) => field.onChange(date?.toDate())}
+                  slotProps={{ textField: { size: 'small' } }}
+                />
+              </FormControl>
+            )}
+          />
           <Button
             type="button"
             variant="contained"
